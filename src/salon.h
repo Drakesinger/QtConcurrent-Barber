@@ -4,7 +4,8 @@
 #include <QGraphicsView>
 class Barbier;
 class QSemaphore;
-class QQueue;
+class Client;
+#include <QQueue>
 
 class Salon : public QGraphicsView
 {
@@ -16,13 +17,13 @@ signals:
 
 public slots:
     void clientArrive(Client c);
-    void barbierFiniCoupe();
+    void barbierFiniCoupe(Client c);
 private:
     void mettreAJourFile();
 
 
     Barbier *barbier;
-    QSemaphore *sem;
+    QSemaphore *semaphoreSalon;
     QQueue<Client> *fileAttente;
 };
 
