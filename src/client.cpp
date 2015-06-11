@@ -8,7 +8,7 @@ Client::Client(QObject *parent) :
 
     run();
 
-    connect(this, SIGNAL(clientArriive(this)), Salon, SLOT(clientArrive(this)));
+//    connect(this, SIGNAL(clientArriive(this)), Salon, SLOT(clientArrive(this)));
     connect(this, SIGNAL(clientParti()), this, SLOT(deleteLater()));
 }
 

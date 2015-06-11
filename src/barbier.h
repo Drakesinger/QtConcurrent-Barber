@@ -21,11 +21,10 @@ signals:
 public slots:
     void dormir();
     void couperCheveux(Client c);
-    void appelerClientSuivant();
+    void appelerClientSuivant(Client c);
 
 private:
     QSemaphore *sem;
-
 };
 
 #endif // BARBIER_H

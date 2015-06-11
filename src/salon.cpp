@@ -4,14 +4,13 @@
 
 #include <QtWidgets>
 #include <QSemaphore>
-#include <QQueue>
 #include <QDebug>
 
 Salon::Salon(QWidget *parent) :
     QGraphicsView(parent)
 {
     barbier= new Barbier(this);
-    sem= new Semaphore(5);
+    semaphoreSalon= new QSemaphore(5);
     fileAttente=  new QQueue<Client>();
 }
 
@@ -19,14 +18,15 @@ void Salon::clientArrive(Client c)
 {
     qDebug()<<"salon.clientArrivé"<<endl;
 
-    if(sem->tryAcquire())
+    if(semaphoreSalon->available()!=0)
     {
-        if(barbier->getSemaphore().tryAcquire())
+        if(barbier->getSemaphore().available())
         {
-            barbier->couperCheveux(c);
+            barbier->appelerClientSuivant(c);
         }
         else
         {
+            semaphoreSalon->acquire();
             fileAttente->enqueue(c);
             mettreAJourFile();
         }
@@ -36,6 +36,20 @@ void Salon::clientArrive(Client c)
         c.partirSalon();;
     }
 
+}
+
+void Salon::barbierFiniCoupe(Client c)
+{
+    c.partirSalon();
+    semaphoreSalon->release();
+    if(!fileAttente->isEmpty())
+    {
+        barbier->appelerClientSuivant(fileAttente->dequeue());
+    }
+    else
+    {
+        barbier->dormir();
+    }
 }
 
 void Salon::mettreAJourFile()
