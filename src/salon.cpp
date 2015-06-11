@@ -11,16 +11,16 @@ Salon::Salon(QWidget *parent) :
 {
     barbier= new Barbier(this);
     semaphoreSalon= new QSemaphore(5);
-    fileAttente=  new QQueue<Client>();
+    fileAttente=  new QQueue<Client*>();
 }
 
-void Salon::clientArrive(Client c)
+void Salon::clientArrive(Client* c)
 {
     qDebug()<<"salon.clientArrivé"<<endl;
 
     if(semaphoreSalon->available()!=0)
     {
-        if(barbier->getSemaphore().available())
+        if(barbier->getSemaphore()->available())
         {
             barbier->appelerClientSuivant(c);
         }
@@ -33,14 +33,14 @@ void Salon::clientArrive(Client c)
     }
     else
     {
-        c.partirSalon();;
+        c->partirSalon();;
     }
 
 }
 
-void Salon::barbierFiniCoupe(Client c)
+void Salon::barbierFiniCoupe(Client *c)
 {
-    c.partirSalon();
+    c->partirSalon();
     semaphoreSalon->release();
     if(!fileAttente->isEmpty())
     {

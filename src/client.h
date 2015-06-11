@@ -14,7 +14,7 @@ protected:
     void run();
 
 signals:
-    void clientArriive();
+    void clientArrive(Client* c);
     void clientParti();
 
 public slots:

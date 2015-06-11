@@ -4,27 +4,28 @@
 #include <QObject>
 #include <QThread>
 class QSemaphore;
-
+class Client;
 
 class Barbier : public QThread
 {
     Q_OBJECT
 public:
     Barbier(QObject *parent = 0);
-    QSemaphore getSemaphore();
+    QSemaphore* getSemaphore();
+    QSemaphore *sem;
 
 protected:
     void run();
 signals:
-    void finiCoupe();
+    void finiCoupe(Client* c);
 
 public slots:
     void dormir();
-    void couperCheveux(Client c);
-    void appelerClientSuivant(Client c);
+    void couperCheveux(Client* c);
+    void appelerClientSuivant(Client *c);
 
 private:
-    QSemaphore *sem;
+
 };
 
 #endif // BARBIER_H

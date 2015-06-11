@@ -16,15 +16,15 @@ public:
 signals:
 
 public slots:
-    void clientArrive(Client c);
-    void barbierFiniCoupe(Client c);
+    void clientArrive(Client *c);
+    void barbierFiniCoupe(Client* c);
 private:
     void mettreAJourFile();
 
 
     Barbier *barbier;
     QSemaphore *semaphoreSalon;
-    QQueue<Client> *fileAttente;
+    QQueue<Client*> *fileAttente;
 };
 
 #endif // SALON_H

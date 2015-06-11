@@ -2,6 +2,7 @@
 #include "salon.h"
 #include "client.h"
 #include <QSemaphore>
+#include <QDebug>
 
 
 Barbier::Barbier(QObject *parent) :
@@ -10,10 +11,10 @@ Barbier::Barbier(QObject *parent) :
     sem= new QSemaphore(1);
 
     run();
-    connect(this, SIGNAL(finiCoupe(Client c)),(Salon*) this->parent(), SLOT(barbierFiniCoupe(Client c)));
+    connect(this, SIGNAL(finiCoupe(Client* c)),(Salon*) this->parent(), SLOT(barbierFiniCoupe(Client* c)));
 }
 
-QSemaphore Barbier::getSemaphore()
+QSemaphore* Barbier::getSemaphore()
 {
     return sem;
 }
@@ -31,7 +32,7 @@ void Barbier::dormir()
 
 }
 
-void Barbier::appelerClientSuivant(Client c)
+void Barbier::appelerClientSuivant(Client* c)
 {
     qDebug()<<"barbier.appelerClientSuivant()"<<endl;
     //Animation...
@@ -39,7 +40,7 @@ void Barbier::appelerClientSuivant(Client c)
     sem->acquire();
     couperCheveux(c);
 }
-void Barbier::couperCheveux(Client c)
+void Barbier::couperCheveux(Client *c)
 {
     qDebug()<<"barbier.couperCheveux()"<<endl;
 

@@ -8,7 +8,7 @@ Client::Client(QObject *parent) :
 
     run();
 
-//    connect(this, SIGNAL(clientArriive(this)), Salon, SLOT(clientArrive(this)));
+    connect(this, SIGNAL(clientArrive(Client c)), (Salon*) this->parent(), SLOT(clientArrive(Client c)));
     connect(this, SIGNAL(clientParti()), this, SLOT(deleteLater()));
 }
 
@@ -22,7 +22,7 @@ void Client::arriverSalon()
 {
     //Animation...
     qDebug()<<"client.arriverSalon()"<<endl;
-    emit clientArriive(this);;
+    emit clientArrive(this);;
 }
 
 void Client::partirSalon()
