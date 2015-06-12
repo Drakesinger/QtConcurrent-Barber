@@ -14,9 +14,10 @@ public:
     Salon(QWidget *parent = 0);
 
 signals:
-
+    void clientPartDuSalon(Client*);
+    void clientEstAppelle(Client*);
+    void barbierDort();
 public slots:
-
     void clientArrive(Client *c);
     void barbierFiniCoupe(Client* c);
 private slots:

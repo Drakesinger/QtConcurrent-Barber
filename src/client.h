@@ -10,9 +10,7 @@ class Client : public QThread
 public:
     Client(QObject *parent = 0);
 
-    void run() Q_DECL_OVERRIDE{
-        arriverSalon();
-    }
+    void run() Q_DECL_OVERRIDE;
 
 signals:
     void clientArrive(Client* c);
@@ -20,7 +18,7 @@ signals:
 
 public slots:
     void arriverSalon();
-    void partirSalon();
+    void partirSalon(Client* c);
 };
 
 #endif // CLIENT_H
