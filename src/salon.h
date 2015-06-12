@@ -1,13 +1,13 @@
 #ifndef SALON_H
 #define SALON_H
 
-#include <QGraphicsView>
+#include <QtWidgets>
 class Barbier;
 class QSemaphore;
 class Client;
 #include <QQueue>
 
-class Salon : public QGraphicsView
+class Salon : public QWidget
 {
     Q_OBJECT
 public:
@@ -16,15 +16,20 @@ public:
 signals:
 
 public slots:
+
     void clientArrive(Client *c);
     void barbierFiniCoupe(Client* c);
+private slots:
+    void creerClient();
 private:
-    void mettreAJourFile();
-
+    void layout();
 
     Barbier *barbier;
     QSemaphore *semaphoreSalon;
     QQueue<Client*> *fileAttente;
+
+    QPushButton *btnAjouterClient;
+    QTextEdit *textEdit;
 };
 
 #endif // SALON_H

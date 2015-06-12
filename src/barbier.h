@@ -14,8 +14,7 @@ public:
     QSemaphore* getSemaphore();
     QSemaphore *sem;
 
-protected:
-    void run();
+    void run() Q_DECL_OVERRIDE;
 signals:
     void finiCoupe(Client* c);
 
