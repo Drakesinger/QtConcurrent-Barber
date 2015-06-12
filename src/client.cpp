@@ -5,10 +5,13 @@
 Client::Client(QObject *parent) :
     QThread(parent)
 {
-
-    connect(this, SIGNAL(clientArrive(Client*)), (Salon*) this->parent(), SLOT(clientArrive(Client *)));
     connect(this, SIGNAL(clientParti()), this, SIGNAL(finished()));
     connect(this, SIGNAL(finished()), this,SLOT(deleteLater()));
+}
+
+void Client::run()
+{
+    arriverSalon();
 }
 
 void Client::arriverSalon()
@@ -16,7 +19,7 @@ void Client::arriverSalon()
     emit clientArrive(this);;
 }
 
-void Client::partirSalon()
+void Client::partirSalon(Client* c)
 {
     emit clientParti();
 }

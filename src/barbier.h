@@ -12,7 +12,7 @@ class Barbier : public QThread
 public:
     Barbier(QObject *parent = 0);
     QSemaphore* getSemaphore();
-    QSemaphore *sem;
+    QSemaphore* semBarberReady;
 
     void run() Q_DECL_OVERRIDE;
 signals:
@@ -21,7 +21,7 @@ signals:
 public slots:
     void dormir();
     void couperCheveux(Client* c);
-    void appelerClientSuivant(Client *c);
+    void appelerClientSuivant(Client* c);
 
 private:
 

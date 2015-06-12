@@ -8,18 +8,26 @@
 Salon::Salon(QWidget *parent):QWidget(parent)
 {
     setWindowTitle(tr("Barbier"));
-    barbier= new Barbier(this);
-    semaphoreSalon= new QSemaphore(5);
-    fileAttente=  new QQueue<Client*>();
+
+    barbier = new Barbier(/*this*/);
+    semaphoreSalon = new QSemaphore(5);
+    fileAttente =  new QQueue<Client*>();
 
     btnAjouterClient= new QPushButton(tr("Ajouter client"),this);
     textEdit= new QTextEdit(this);
     textEdit->setReadOnly(true);
 
     layout();
-
-    barbier->run();
+    connect(this,SIGNAL(barbierDort()),barbier,SLOT(dormir()));
+    connect(barbier, SIGNAL(finiCoupe(Client*)), this, SLOT(barbierFiniCoupe(Client*)));
+    connect(this, SIGNAL(clientEstAppelle(Client*)),barbier,SLOT(appelerClientSuivant(Client*)));
     connect(btnAjouterClient, SIGNAL(clicked()), this, SLOT(creerClient()));
+
+//    for (int var = 0; var < 2; ++var) {
+//        creerClient();
+//    }
+
+    barbier->start();
 }
 
 void Salon::clientArrive(Client* c)
@@ -31,7 +39,7 @@ void Salon::clientArrive(Client* c)
         if(barbier->getSemaphore()->available())
         {
             textEdit->setText(textEdit->toPlainText() + "barbier appelle prochain client\n");
-            barbier->appelerClientSuivant(c);
+            emit clientEstAppelle(c);
         }
         else
         {
@@ -43,7 +51,7 @@ void Salon::clientArrive(Client* c)
     else
     {
         textEdit->setText(textEdit->toPlainText() + "file d'attente pleine\n\t client part\n");
-        c->partirSalon();;
+        emit clientPartDuSalon(c);
     }
 
 }
@@ -52,24 +60,28 @@ void Salon::barbierFiniCoupe(Client *c)
 {
     textEdit->setText(textEdit->toPlainText() + "barbier a fini coupe\n");
     textEdit->setText(textEdit->toPlainText() + "client part\n\n");
-    c->partirSalon();
+    emit clientPartDuSalon(c);
     semaphoreSalon->release();
     if(!fileAttente->isEmpty())
     {
         textEdit->setText(textEdit->toPlainText() + "barbier appelle prochain client\n");
-        barbier->appelerClientSuivant(fileAttente->dequeue());
+        emit clientEstAppelle(fileAttente->dequeue());
     }
     else
     {
         textEdit->setText(textEdit->toPlainText() + "barbier va dormir\n");
-        barbier->dormir();
+        emit barbierDort();
     }
 }
 
 void Salon::creerClient()
 {
-    Client c(this);
-    c.run();
+    Client* c = new Client(/*this*/);
+
+    connect(c, SIGNAL(clientArrive(Client*)), this, SLOT(clientArrive(Client*)));
+    connect(this,SIGNAL(clientPartDuSalon(Client*)),c,SLOT(partirSalon(Client*)));
+
+    c->start();
 }
 
 
